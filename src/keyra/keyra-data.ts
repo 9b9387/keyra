@@ -40,7 +40,7 @@ export class KeyraData {
   static deserialize(json: string): KeyraData {
     try {
       const data = JSON.parse(json);
-      const rule_json = data.rule;
+      const rule_json = JSON.stringify(data.rule);
       const keyraData = new KeyraData(
         data.serviceName,
         data.version,
