@@ -38,8 +38,22 @@ export class KeyraData {
    * @returns KeyraData object
    */
   static deserialize(json: string): KeyraData {
-    const data = JSON.parse(json);
-    return Object.assign(new KeyraData(''), data);
+    try {
+      const data = JSON.parse(json);
+      const rule_json = data.rule;
+      const keyraData = new KeyraData(
+        data.serviceName,
+        data.version,
+        KeyraRule.deserialize(rule_json),
+        data.note,
+        new Date(data.createDate),
+        data.domain
+      );
+      
+      return keyraData;
+    } catch (error) {
+      throw new Error(`Failed to deserialize KeyraData: ${error}`);
+    }
   }
 
   /**

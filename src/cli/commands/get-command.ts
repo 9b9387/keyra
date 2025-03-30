@@ -89,7 +89,6 @@ export class GetCommand extends BaseCommand {
     try {
       // Get service history data
       const historyData = this.dataManager.getServiceHistory(serviceName);
-      
       if (!historyData || historyData.length === 0) {
         console.log(`Service "${serviceName}" has no password history records`);
         return;

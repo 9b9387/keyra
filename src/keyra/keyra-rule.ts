@@ -47,9 +47,16 @@ export class KeyraRule {
   // Deserialize from JSON string to KeyraRule object
   public static deserialize(jsonString: string): KeyraRule {
     try {
-      var data = JSON.parse(jsonString);
-      var rule = new KeyraRule();
-      return Object.assign(rule, data);
+      const data = JSON.parse(jsonString);
+      return new KeyraRule(
+        data.name,
+        data.length,
+        data.requireUppercase,
+        data.requireLowercase,
+        data.requireNumbers,
+        data.requireSymbols,
+        data.allowedSymbols
+      );
     } catch (error) {
       throw new Error(`Failed to parse KeyraRule from JSON: ${error}`);
     }
