@@ -1,6 +1,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
+import terser from '@rollup/plugin-terser';
 
 export default [
   {
@@ -22,20 +23,24 @@ export default [
     external: ['crypto'],
     plugins: [
       nodeResolve(),
-      typescript({ 
-        tsconfig: './tsconfig.lib.json'
+      typescript({
+        target: 'ES2018',
+        strict: true,
+        esModuleInterop: true,
+        include: ['src/lib/**/*'],
+        exclude: ['node_modules', '**/*.test.ts']
       }),
+      terser()
     ],
   },
-    // 类型声明
-    {
-        input: 'src/lib/index.ts',
-        output: {
-          file: 'dist/lib/types/index.d.ts',
-          format: 'esm',
-        },
-        plugins: [dts()],
-      },
+  {
+    input: 'src/lib/index.ts',
+    output: {
+      file: 'dist/types/index.d.ts', // 修改输出路径到 dist/types
+      format: 'esm',
+    },
+    plugins: [dts()],
+  },
   {
     input: 'src/cli/start.ts',
     output: {
@@ -49,12 +54,12 @@ export default [
       nodeResolve({
         preferBuiltins: true
       }),
-      typescript({ 
-        tsconfig: './tsconfig.cli.json',
-        compilerOptions: {
-          module: 'esnext'
-        }
+      typescript({
+        module: 'esnext',
+        target: 'esnext',
+        include: ['src/cli/**/*', 'src/lib/**/*'],
       }),
+      terser()
     ],
   },
 ];
