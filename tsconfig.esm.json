@@ -3,8 +3,9 @@
     "target": "ES2018",
     "module": "ESNext",
     "outDir": "./dist/esm",
-    "rootDir": "./src",
+    "rootDir": "./src/keyra",
     "strict": true,
+    "composite": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -12,9 +13,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "node",
-    "declarationDir": "./dist/types"
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/keyra/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"]
 }

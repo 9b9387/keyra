@@ -1,9 +1,7 @@
 import { Command } from 'commander';
 import { BaseCommand } from './base-command';
 import * as readline from 'readline';
-import { KeyraRule } from '../..';
-import { KeyraData } from '../../keyra/keyra-data';
-import { DEFAULT_RULE } from '../../keyra/keyra-rule';
+import { KeyraRule, KeyraData, DEFAULT_RULE } from '../../keyra';
 import { DataManager } from '../managers/data-manager';
 
 /**

@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { Generator } from '../..';
+import { Generator } from '../../keyra';
 import * as readline from 'readline';
 import { RuleManager } from '../managers/rule-manager';
 

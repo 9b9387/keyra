@@ -17,7 +17,9 @@
   "scripts": {
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "build": "npm run build:cjs && npm run build:esm",
+    "build:cli": "tsc --project tsconfig.cli.json",
+    "build:types": "tsc --project tsconfig.types.json",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types && npm run build:cli",
     "start": "node dist/cjs/index.js",
     "dev": "ts-node --esm src/index.ts",
     "test": "jest",

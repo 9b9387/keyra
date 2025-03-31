@@ -1,5 +1,4 @@
-import { KeyraRule } from "../..";
-import { DEFAULT_RULE } from "../../keyra/keyra-rule";
+import { KeyraRule, DEFAULT_RULE} from "../../keyra";
 import * as path from 'path';
 import * as os from 'os';
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs';
