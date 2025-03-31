@@ -1,4 +1,4 @@
-import { KeyraData } from "../../keyra/keyra-data.js";
+import { KeyraData } from "../../lib/keyra-data.js";
 import * as path from 'path';
 import * as os from 'os';
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs';

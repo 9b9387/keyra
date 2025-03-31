@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { BaseCommand } from './base-command';
 import { DataManager } from '../managers/data-manager';
-import { KeyraData } from '../../keyra/keyra-data';
+import { KeyraData } from '../../lib/keyra-data';
 
 /**
  * Get Password Command Class

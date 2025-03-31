@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
-      "module": "CommonJS",
       "target": "ES2018",
-      "rootDir": "./src/cli",
-      "outDir": "./dist/cli",
+      "module": "esnext",
+      "moduleResolution": "node",
       "esModuleInterop": true,
       "strict": true,
       "skipLibCheck": true,
@@ -13,8 +12,5 @@
         "@keyra": ["./src/keyra"]
       }
     },
-    "include": ["src/cli/**/*"],
-    "references": [
-      { "path": "./tsconfig.cjs.json" }
-    ]
+    "include": ["src/cli/**/*"]
 }

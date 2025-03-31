@@ -2,25 +2,22 @@
   "name": "keyra",
   "version": "1.0.0",
   "description": "Keyra is a stateless password generator that uses your master password and service name to create strong, unique, and repeatable passwords for every website.",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "main": "./dist/lib/cjs/index.cjs",
+  "module": "./dist/lib/esm/index.mjs",
+  "types": "./dist/lib/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/lib/cjs/index.cjs",
+      "import": "./dist/lib/esm/index.mjs",
+      "types": "./dist/lib/types/index.d.ts"
     }
   },
   "bin": {
-    "keyra": "./dist/cjs/cli/start.js"
+    "keyra": "./dist/cli/index.js"
   },
   "scripts": {
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
-    "build:cli": "tsc --project tsconfig.cli.json",
-    "build:types": "tsc --project tsconfig.types.json",
-    "build": "npm run build:cjs && npm run build:esm && npm run build:types && npm run build:cli",
-    "start": "node dist/cjs/index.js",
+    "build": "rollup -c",
+    "start": "node dist/cjs/index.cjs",
     "dev": "ts-node --esm src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -48,12 +45,17 @@
     "url": "https://github.com/9b9387/keyra/issues"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^18.15.11",
     "jest": "^29.7.0",
+    "rollup": "^4.38.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "tslib": "^2.8.1",
+    "typescript": "^5.0.4",
+    "rollup-plugin-dts": "^6.2.1"
   },
   "dependencies": {
     "commander": "^13.1.0"

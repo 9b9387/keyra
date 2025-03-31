@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { BaseCommand } from "./base-command";
 import * as readline from "readline";
-import { KeyraRule, DEFAULT_RULE } from "../../keyra";
+import { KeyraRule, DEFAULT_RULE } from "../../lib";
 
 /**
  * Rule Add Command Class - For adding new rules
