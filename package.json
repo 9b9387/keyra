@@ -33,6 +33,7 @@
     "url": "https://github.com/9b9387/keyra/issues"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
@@ -44,6 +45,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "commander": "^13.1.0"
+    "commander": "^13.1.0",
+    "scrypt-js": "^3.0.1"
   }
 }

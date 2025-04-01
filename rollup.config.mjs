@@ -2,6 +2,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default [
   {
@@ -20,9 +21,40 @@ export default [
         sourcemap: true
       }
     ],
-    external: ['crypto'],
+    external: ['scrypt-js'],
     plugins: [
-      nodeResolve(),
+      nodeResolve({
+        browser: true,
+        preferBuiltins: false,
+        mainFields: ['browser', 'module', 'main']
+      }),
+      commonjs(),
+      typescript({
+        target: 'ES2018',
+        strict: true,
+        esModuleInterop: true,
+        include: ['src/lib/**/*'],
+        exclude: ['node_modules', '**/*.test.ts']
+      }),
+      terser()
+    ],
+  },
+  // Web build (bundle dependencies)
+  {
+    input: 'src/lib/index.ts',
+    output: {
+      file: 'web/scripts/bundle.js',
+      format: 'umd',
+      name: 'keyra',
+      globals: {} // Empty since we're bundling dependencies
+    },
+    plugins: [
+      nodeResolve({
+        browser: true,
+        preferBuiltins: false,
+        mainFields: ['browser', 'module', 'main']
+      }),
+      commonjs(),
       typescript({
         target: 'ES2018',
         strict: true,
@@ -49,7 +81,7 @@ export default [
       sourcemap: true,
       exports: 'auto'
     },
-    external: ['commander'],
+    external: ['scrypt-js', 'commander'],
     plugins: [
       nodeResolve({
         preferBuiltins: true

@@ -61,7 +61,7 @@ export class GenerateCommand extends BaseCommand {
     }
     
     const keyraData = new KeyraData(serviceName, 1, rule);
-    const password = this.passwordGenerator.generate(masterPassword, keyraData);
+    const password = await this.passwordGenerator.generate(masterPassword, keyraData);
     console.log(password);
     
     // Save data locally

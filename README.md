@@ -25,7 +25,7 @@ npm install keyra
 npm install -g keyra
 
 # Basic usage
-keyra generate <service-name>
+keyra gen <service-name>
 
 # View help
 keyra --help
@@ -57,7 +57,7 @@ const data = new KeyraData(
 
 // Generate password
 const generator = new Generator();
-const password = generator.generate('masterPassword', data);
+const password = await generator.generate('masterPassword', data);
 console.log(password); // Output the generated password
 ```
 

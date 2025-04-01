@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/scrypt-js@3.0.1/scrypt.min.js"></script>
+
+    <script src="scripts/bundle.js"></script>
+    <script>
+        (async function() {
+            var generator = new keyra.Generator();
+            var password = await generator.generate("111", new keyra.KeyraData("keyra"));
+            console.log(password);
+        })();
+    </script>
+</body>
+</html>

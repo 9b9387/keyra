@@ -63,7 +63,7 @@ export class GetCommand extends BaseCommand {
         await this.displayPasswordHistory(masterPassword, serviceName, options.detail);
       } else {
         // Generate current password
-        const password = this.passwordGenerator.generate(masterPassword, data);
+        const password = await this.passwordGenerator.generate(masterPassword, data);
 
         // Display password
         console.log(`${password}\n`);
@@ -97,7 +97,7 @@ export class GetCommand extends BaseCommand {
       // Show historical passwords, including current version
       for (let i = 0; i < historyData.length; i++) {
         const data = historyData[i];
-        const password = this.passwordGenerator.generate(masterPassword, data);
+        const password = await this.passwordGenerator.generate(masterPassword, data);
         
         console.log(`v${data.version}: ${password}`);
         

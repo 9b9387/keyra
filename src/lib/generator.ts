@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import { scrypt } from 'scrypt-js';
 import { KeyraRule } from './keyra-rule';
 import { KeyraData } from './keyra-data';
 
@@ -11,13 +11,11 @@ export class Generator {
    * @param version The password version, allowing password updates for specific services without changing the master password
    * @returns A 64-byte hash buffer that serves as the basis for password generation
    */
-  private generateHash(masterPassword: string, serviceName: string, version: number): Buffer {
-    const salt = Buffer.from(`${serviceName}:${version}`, 'utf8');
-    return crypto.scryptSync(masterPassword, salt, 64, {
-      N: 16384, // CPU/memory cost parameter
-      r: 8,     // Memory parameter
-      p: 1      // Parallelization parameter
-    });
+  private async generateHash(masterPassword: string, serviceName: string, version: number): Promise<Uint8Array> {
+    const passwordBuffer = new TextEncoder().encode(masterPassword);
+    const salt = new TextEncoder().encode(`${serviceName}:${version}`);
+    
+    return await scrypt(passwordBuffer, salt, 16384, 8, 1, 64);
   }
 
   /**
@@ -27,10 +25,10 @@ export class Generator {
    * @param rule Password generation rules including length and character requirements
    * @returns The password string generated according to the rules
    */
-  private hash(hash: Buffer, rule: KeyraRule): string {
+  private hash(hash: Uint8Array, rule: KeyraRule): string {
     // 验证输入参数
-    if (!hash || !(hash instanceof Buffer)) {
-      throw new Error('Hash must be a valid Buffer');
+    if (!hash || !(hash instanceof Uint8Array)) {
+      throw new Error('Hash must be a valid Uint8Array');
     }
     
     if (!rule || !(rule instanceof KeyraRule)) {
@@ -108,8 +106,7 @@ export class Generator {
    * @returns The generated password string
    * @throws Error if validation fails
    */
-  public generate(masterPassword: string, data: KeyraData): string {
-
+  public async generate(masterPassword: string, data: KeyraData): Promise<string> {
     if (!masterPassword || typeof masterPassword !== 'string') {
       throw new Error('Master password must be a non-empty string');
     }
@@ -122,7 +119,7 @@ export class Generator {
       throw new Error('Invalid password rule');
     }
     
-    const hash = this.generateHash(masterPassword, data.serviceName, data.version);
+    const hash = await this.generateHash(masterPassword, data.serviceName, data.version);
     return this.hash(hash, data.rule);
   }
 }
