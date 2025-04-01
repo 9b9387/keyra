@@ -23,13 +23,28 @@ npm install keyra
 ```bash
 # Global installation
 npm install -g keyra
-
-# Basic usage
-keyra gen <service-name>
-
-# View help
-keyra --help
 ```
+
+#### Available Commands
+
+- `gen <service-name>`: Generate a new password for the specified service.
+- `get <service-name>`: Retrieve the password for a service.
+  - Options:
+    - `-d, --detail`: Show detailed information.
+    - `-h, --history`: Show password history.
+    - `-p, --password <password>`: Set master password.
+- `list`: List all saved service entries.
+- `delete <service-name>`: Remove a saved service entry.
+  - Options:
+    - `-f, --force`: Force delete without confirmation.
+- `rotate <service-name>`: Rotate a service password and increment the version number.
+  - Options:
+    - `-f, --force`: Force execution without confirmation prompt.
+- `rule:list`: Display all password rules.
+- `rule:add`: Add a new password rule.
+- `rule:delete <ruleName>`: Delete an existing password rule.
+  - Options:
+    - `-f, --force`: Force delete without confirmation.
 
 ### As a Library
 
@@ -57,8 +72,10 @@ const data = new KeyraData(
 
 // Generate password
 const generator = new Generator();
-const password = await generator.generate('masterPassword', data);
-console.log(password); // Output the generated password
+(async () => {
+  const password = await generator.generate('masterPassword', data);
+  console.log(password); // Output the generated password
+})();
 ```
 
 ## Password Rules

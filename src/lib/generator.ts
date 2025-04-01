@@ -25,7 +25,7 @@ export class Generator {
    * @param rule Password generation rules including length and character requirements
    * @returns The password string generated according to the rules
    */
-  private hash(hash: Uint8Array, rule: KeyraRule): string {
+  private generatePasswordFromHash(hash: Uint8Array, rule: KeyraRule): string {
     // 验证输入参数
     if (!hash || !(hash instanceof Uint8Array)) {
       throw new Error('Hash must be a valid Uint8Array');
@@ -46,7 +46,6 @@ export class Generator {
     if (rule.requireNumbers) availableChars += numberChars;
     if (rule.requireSymbols) availableChars += symbolChars;
     
-    // 确保有可用的字符集
     if (availableChars.length === 0) {
       throw new Error('No available characters for password generation. Please enable at least one character type.');
     }
@@ -77,7 +76,6 @@ export class Generator {
       passwordChars.push(symbolChars[hash[3] % symbolChars.length]);
     }
     
-    // 验证密码长度设置是否合理
     if (rule.length < passwordChars.length) {
       throw new Error(`Password length (${rule.length}) must be at least ${passwordChars.length} to accommodate required character types`);
     }
@@ -120,6 +118,6 @@ export class Generator {
     }
     
     const hash = await this.generateHash(masterPassword, data.serviceName, data.version);
-    return this.hash(hash, data.rule);
+    return this.generatePasswordFromHash(hash, data.rule);
   }
 }

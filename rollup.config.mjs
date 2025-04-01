@@ -3,6 +3,7 @@ import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json'; // Add JSON plugin
 
 export default [
   {
@@ -26,11 +27,10 @@ export default [
       nodeResolve(),
       commonjs(),
       typescript({
-        target: 'ES2018',
+        target: 'es2020',
         strict: true,
         esModuleInterop: true,
         include: ['src/lib/**/*'],
-        exclude: ['node_modules', '**/*.test.ts']
       }),
       terser()
     ],
@@ -51,11 +51,10 @@ export default [
       }),
       commonjs(),
       typescript({
-        target: 'ES2018',
+        target: 'es2020',
         strict: true,
         esModuleInterop: true,
         include: ['src/lib/**/*'],
-        exclude: ['node_modules', '**/*.test.ts']
       }),
       terser()
     ],
@@ -73,15 +72,17 @@ export default [
     output: {
       file: 'dist/cli/index.js',
       format: 'cjs',
-      sourcemap: true,
       exports: 'auto'
     },
     external: ['scrypt-js', 'commander'],
     plugins: [
       nodeResolve(),
+      json(),
       typescript({
-        module: 'esnext',
-        target: 'esnext',
+        module: 'es2020',
+        target: 'es2020',
+        resolveJsonModule: true,
+        allowSyntheticDefaultImports: true,
         include: ['src/cli/**/*', 'src/lib/**/*'],
       }),
       terser()

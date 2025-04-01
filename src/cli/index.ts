@@ -7,6 +7,7 @@ import { ListCommand } from './commands/list-command';
 import { DeleteCommand } from './commands/delete-command';
 import { GetCommand } from './commands/get-command';
 import { RotateCommand } from './commands/rotate-command';
+import packageJson from '../../package.json';
 
 /**
  * CLI类 - 提供命令行交互界面
@@ -38,7 +39,7 @@ export class CLI {
     this.program
       .name('keyra')
       .description('Keyra is a stateless password generator that uses your master password and service name to create strong, unique, and repeatable passwords for every website.')
-      .version('1.0.0');
+      .version(packageJson.version); // Dynamically read version from package.json
 
     // 注册所有命令
     this.commands.forEach(command => {
