@@ -3,18 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Keyra Password Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
 </head>
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/scrypt-js@3.0.1/scrypt.min.js"></script>
+<body class="bg-gray-50">
+    <div class="min-h-screen p-4 md:p-8">
+        <!-- Header -->
+        <header class="max-w-4xl mx-auto mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Keyra Password Generator</h1>
+            <p class="text-gray-600">Generate strong, unique passwords for all your services</p>
+        </header>
+
+        <!-- Main Form -->
+        <div class="max-w-4xl mx-auto">
+            <form id="passwordForm" class="space-y-6" onsubmit="return false;">
+                <!-- Service Information Card -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-info-circle mr-2 text-blue-500"></i>Service Information
+                    </h2>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="masterPassword">
+                                Master Password
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="masterPassword" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <button type="button" onclick="togglePassword('masterPassword')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="serviceName">
+                                Service Name
+                            </label>
+                            <input type="text" id="serviceName" required
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="version">
+                                Version
+                            </label>
+                            <input type="number" id="version" value="1" min="1"
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Rules Card -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>Password Rules
+                    </h2>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="length">
+                                Password Length
+                            </label>
+                            <input type="number" id="length" value="16" min="4"
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <label class="flex items-center space-x-2 text-sm text-gray-700">
+                            <input type="checkbox" id="requireUppercase" checked
+                                class="rounded text-blue-500 focus:ring-blue-500">
+                            <span>Uppercase</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-sm text-gray-700">
+                            <input type="checkbox" id="requireLowercase" checked
+                                class="rounded text-blue-500 focus:ring-blue-500">
+                            <span>Lowercase</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-sm text-gray-700">
+                            <input type="checkbox" id="requireNumbers" checked
+                                class="rounded text-blue-500 focus:ring-blue-500">
+                            <span>Numbers</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-sm text-gray-700">
+                            <input type="checkbox" id="requireSymbols" checked
+                                class="rounded text-blue-500 focus:ring-blue-500">
+                            <span>Symbols</span>
+                        </label>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="allowedSymbols">
+                            Allowed Symbols
+                        </label>
+                        <input type="text" id="allowedSymbols" value="!@#$%^&*()_+-=[]{}|;:,.<>?"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="text-center">
+                    <button onclick="generatePassword()"
+                        class="px-8 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-transform hover:scale-105">
+                        <i class="fas fa-key mr-2"></i>Generate Password
+                    </button>
+                </div>
+            </form>
+
+            <!-- Result Section -->
+            <div id="result" class="mt-8 bg-white rounded-lg shadow-md p-6 hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>Generated Password
+                </h3>
+                <div class="flex items-center space-x-4">
+                    <code id="password" class="flex-1 p-4 bg-gray-50 rounded-lg text-lg font-mono break-all"></code>
+                    <button onclick="copyPassword()" 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        <i class="far fa-copy mr-2"></i>Copy
+                    </button>
+                </div>
+                <p id="copyMessage" class="mt-2 text-green-500 text-sm hidden">
+                    <i class="fas fa-check mr-1"></i>Password copied to clipboard!
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script src="scripts/bundle.js"></script>
     <script>
-        (async function() {
-            var generator = new keyra.Generator();
-            var password = await generator.generate("111", new keyra.KeyraData("keyra"));
-            console.log(password);
-        })();
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        async function copyPassword() {
+            const password = document.getElementById('password').textContent;
+            await navigator.clipboard.writeText(password);
+            
+            const copyMessage = document.getElementById('copyMessage');
+            copyMessage.classList.remove('hidden');
+            setTimeout(() => {
+                copyMessage.classList.add('hidden');
+            }, 2000);
+        }
+
+        async function generatePassword() {
+            try {
+                // 创建 KeyraRule 实例，使用空字符串作为name
+                const rule = new keyra.KeyraRule(
+                    '',  // 使用空字符串作为name
+                    parseInt(document.getElementById('length').value),
+                    document.getElementById('requireUppercase').checked,
+                    document.getElementById('requireLowercase').checked,
+                    document.getElementById('requireNumbers').checked,
+                    document.getElementById('requireSymbols').checked,
+                    document.getElementById('allowedSymbols').value
+                );
+
+                // 创建 KeyraData 实例，移除不存在的note和domain
+                const data = new keyra.KeyraData(
+                    document.getElementById('serviceName').value,
+                    parseInt(document.getElementById('version').value),
+                    rule
+                );
+
+                // 创建生成器并生成密码
+                const generator = new keyra.Generator();
+                const password = await generator.generate(
+                    document.getElementById('masterPassword').value,
+                    data
+                );
+
+                // 更新显示结果的方式
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('password').textContent = password;
+                document.getElementById('copyMessage').classList.add('hidden');
+                
+                // 添加动画效果
+                document.getElementById('result').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest' 
+                });
+            } catch (error) {
+                // 使用更友好的错误提示
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg';
+                errorMessage.textContent = `Error: ${error.message}`;
+                document.body.appendChild(errorMessage);
+                
+                setTimeout(() => {
+                    errorMessage.remove();
+                }, 3000);
+            }
+        }
     </script>
 </body>
 </html>
