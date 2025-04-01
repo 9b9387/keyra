@@ -9,7 +9,7 @@
     "keyra": "./dist/cli/index.js"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && chmod +x ./dist/cli/index.js",
     "prepublishOnly": "npm run build"
   },
   "files": [

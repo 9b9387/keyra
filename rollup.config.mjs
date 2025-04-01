@@ -23,11 +23,7 @@ export default [
     ],
     external: ['scrypt-js'],
     plugins: [
-      nodeResolve({
-        browser: true,
-        preferBuiltins: false,
-        mainFields: ['browser', 'module', 'main']
-      }),
+      nodeResolve(),
       commonjs(),
       typescript({
         target: 'ES2018',
@@ -43,10 +39,9 @@ export default [
   {
     input: 'src/lib/index.ts',
     output: {
-      file: 'web/scripts/bundle.js',
+      file: 'docs/scripts/bundle.js',
       format: 'umd',
-      name: 'keyra',
-      globals: {} // Empty since we're bundling dependencies
+      name: 'keyra'
     },
     plugins: [
       nodeResolve({
@@ -68,7 +63,7 @@ export default [
   {
     input: 'src/lib/index.ts',
     output: {
-      file: 'dist/types/index.d.ts', // 修改输出路径到 dist/types
+      file: 'dist/types/index.d.ts',
       format: 'esm',
     },
     plugins: [dts()],
@@ -83,9 +78,7 @@ export default [
     },
     external: ['scrypt-js', 'commander'],
     plugins: [
-      nodeResolve({
-        preferBuiltins: true
-      }),
+      nodeResolve(),
       typescript({
         module: 'esnext',
         target: 'esnext',
