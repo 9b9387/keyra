@@ -16,6 +16,13 @@ Keyra is a stateless password generator that uses your master password and servi
 npm install keyra
 ```
 
+## Try Keyra Online
+
+Try Keyra without installation on our web application:
+[https://9b9387.github.io/keyra](https://9b9387.github.io/keyra)
+
+The online application offers the same functionality as the installed version but runs directly in your browser.
+
 ## Usage
 
 ### As a CLI Tool
