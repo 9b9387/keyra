@@ -10,12 +10,6 @@ Keyra is a stateless password generator that uses your master password and servi
 - **Secure Algorithm**: Uses scrypt encryption algorithm to ensure password security
 - **Version Control**: Allows updating passwords for specific services without changing the master password
 
-## Installation
-
-```bash
-npm install keyra
-```
-
 ## Try Keyra Online
 
 Try Keyra without installation on our web application:
@@ -54,6 +48,10 @@ npm install -g keyra
     - `-f, --force`: Force delete without confirmation.
 
 ### As a Library
+
+```bash
+npm install keyra
+```
 
 ```typescript
 import { KeyraData, KeyraRule, Generator } from 'keyra';
