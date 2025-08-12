@@ -43,7 +43,7 @@ npm install -g keyra
     - `-f, --force`: Force execution without confirmation prompt.
 - `rule:list`: Display all password rules.
 - `rule:add`: Add a new password rule.
-- `rule:delete <ruleName>`: Delete an existing password rule.
+- `rule:delete <rule>`: Delete an existing password rule.
   - Options:
     - `-f, --force`: Force delete without confirmation.
 
@@ -58,21 +58,21 @@ import { KeyraData, KeyraRule, Generator } from 'keyra';
 
 // Create custom password rule
 const rule = new KeyraRule(
-  'my-rule',  // Rule name
-  16,         // Password length
-  true,       // Require uppercase letters
-  true,       // Require lowercase letters
-  true,       // Require numbers
-  true,       // Require symbols
-  '!@#$%^&*' // Allowed symbols
+  'my-rule', // Rule name
+  16, // Password length
+  true, // Require uppercase letters
+  true, // Require lowercase letters
+  true, // Require numbers
+  true, // Require symbols
+  '!@#$%^&*', // Allowed symbols
 );
 
 // Create service data
 const data = new KeyraData(
   'github.com', // Service name
-  1,            // Password version
-  rule,         // Password rule
-  'My GitHub account' // Note
+  1, // Password version
+  rule, // Password rule
+  'My GitHub account', // Note
 );
 
 // Generate password

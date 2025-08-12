@@ -31,6 +31,10 @@ export class KeyraRule {
     if (this.length < 4) {
       throw new Error('Minimum length cannot be less than 4');
     }
+
+    if (this.length > 4096) {
+      throw new Error('Maximum length cannot exceed 4096');
+    }
     // Ensure allowedSymbols only contains ASCII characters
     if (!/^[\x20-\x7E]*$/.test(this.allowedSymbols)) {
       throw new Error('Allowed symbols must only contain ASCII characters');
@@ -45,9 +49,9 @@ export class KeyraRule {
   }
 
   // Deserialize from JSON string to KeyraRule object
-  public static deserialize(jsonString: string): KeyraRule {
+  public static deserialize(jsonStr: string): KeyraRule {
     try {
-      const data = JSON.parse(jsonString);
+      const data = JSON.parse(jsonStr);
       return new KeyraRule(
         data.name,
         data.length,

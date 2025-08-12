@@ -21,7 +21,7 @@ export class Generator {
   ): Promise<Uint8Array> {
     const encoder = new TextEncoder();
     const passwordBuffer = encoder.encode(masterPassword);
-    const salt = encoder.encode(`keyra|v1|${serviceName}|${version}`);
+    const salt = encoder.encode(`keyra|${serviceName}|${version}`);
     const N = 16384, r = 8, p = 1;
 
     return await scrypt(passwordBuffer, salt, N, r, p, requiredLength);

@@ -1,3 +1,10 @@
+/**
+ * @file rule-delete-command.ts
+ * @description CLI command for list all password rules
+ * @author 9b9387
+ * @date 2025-03-31
+ */
+
 import { Command } from 'commander';
 import { BaseCommand } from './base-command';
 
@@ -6,7 +13,7 @@ import { BaseCommand } from './base-command';
  */
 export class RuleListCommand extends BaseCommand {
   constructor() {
-    super('rule:list', 'display all password rules');
+    super('rule:list', 'Show all password rules');
   }
 
   /**

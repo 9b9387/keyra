@@ -3,7 +3,6 @@ import { Generator } from '../../lib';
 import * as readline from 'readline';
 import { RuleManager } from '../managers/rule-manager';
 
-
 /**
  * Base Command - All commands should inherit from this class
  */
@@ -48,10 +47,16 @@ export abstract class BaseCommand {
   /**
    * Wrap readline's question method as a Promise
    */
-  protected async askQuestion(rl: readline.Interface, question: string): Promise<string> {
+  protected async askQuestion(question: string): Promise<string> {
     return new Promise((resolve) => {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+
       rl.question(question, (answer) => {
         resolve(answer);
+        rl.close();
       });
     });
   }
@@ -65,12 +70,12 @@ export abstract class BaseCommand {
       process.stdin.setRawMode(true);
       process.stdin.resume();
       process.stdout.write('Enter master password: ');
-      
+
       let password = '';
-      
+
       process.stdin.on('data', (data: Buffer) => {
         const char = data.toString();
-        
+
         // Handle enter key, indicating input complete
         if (char === '\r' || char === '\n' || char === '\u0004') {
           process.stdout.write('\n');
@@ -80,7 +85,7 @@ export abstract class BaseCommand {
           resolve(password);
           return;
         }
-        
+
         // Handle backspace key
         if (char === '\b' || char === '\x7f') {
           if (password.length > 0) {
@@ -89,12 +94,12 @@ export abstract class BaseCommand {
           }
           return;
         }
-        
+
         // Ignore control characters
         if (char < ' ') {
           return;
         }
-        
+
         // Add character to password
         password += char;
         process.stdout.write('*');

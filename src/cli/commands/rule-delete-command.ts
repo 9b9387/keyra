@@ -1,13 +1,19 @@
+/**
+ * @file rule-delete-command.ts
+ * @description CLI command for deleting a password rule
+ * @author 9b9387
+ * @date 2025-03-31
+ */
+
 import { Command } from 'commander';
 import { BaseCommand } from './base-command';
-import * as readline from 'readline';
 
 /**
  * Rule Delete Command Class - Used to delete existing rules
  */
 export class RuleDeleteCommand extends BaseCommand {
   constructor() {
-    super('rule:delete', 'delete an existing password rule');
+    super('rule:delete', 'Remove a password rule by name');
   }
 
   /**
@@ -17,27 +23,25 @@ export class RuleDeleteCommand extends BaseCommand {
     program
       .command(this.name)
       .description(this.description)
-      .argument('<ruleName>', 'Name of the rule to delete')
-      .option('-f, --force', 'Force delete without confirmation')
-      .action((ruleName: string, options: { force?: boolean }) => this.execute(ruleName, options.force));
+      .argument('<rule>', 'Name of the rule to delete')
+      .action((ruleName: string) => this.execute(ruleName));
   }
 
   /**
    * Execute command
    */
-  private execute(ruleName: string, force?: boolean): void {
+  private execute(ruleName: string): void {
     if (ruleName) {
-      // If a name parameter is provided, try to delete the specified rule
-      this.deleteRuleByName(ruleName, force);
+      this.deleteRuleByName(ruleName);
     }
   }
 
   /**
    * Delete rule by name
    */
-  private deleteRuleByName(ruleName: string, force?: boolean): void {
+  private deleteRuleByName(ruleName: string): void {
     if (ruleName === 'default') {
-      console.log('Default rule cannot be deleted.');
+      console.log('The default rule cannot be deleted.');
       return;
     }
 
@@ -47,34 +51,11 @@ export class RuleDeleteCommand extends BaseCommand {
       return;
     }
 
-    if (force) {
-      // Skip confirmation if force flag is set
-      const result = this.ruleManager.deleteRule(ruleName);
-      if (result) {
-        console.log(`Rule "${ruleName}" has been successfully deleted.`);
-      } else {
-        console.log(`Failed to delete rule "${ruleName}".`);
-      }
-      return;
+    const result = this.ruleManager.deleteRule(ruleName);
+    if (result) {
+      console.log(`Rule "${ruleName}" deleted successfully.`);
+    } else {
+      console.log(`Failed to delete rule "${ruleName}".`);
     }
-
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-
-    rl.question(`Are you sure you want to delete rule "${ruleName}"? (y/n): `, (answer) => {
-      if (answer.trim().toLowerCase() === 'y') {
-        const result = this.ruleManager.deleteRule(ruleName);
-
-        if (result) {
-          console.log(`Rule "${ruleName}" has been successfully deleted.`);
-        } else {
-          console.log(`Failed to delete rule "${ruleName}".`);
-        }
-      }
-
-      rl.close();
-    });
   }
 }

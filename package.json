@@ -1,6 +1,6 @@
 {
   "name": "keyra",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Keyra is a stateless password generator that uses your master password and service name to create strong, unique, and repeatable passwords for every website.",
   "main": "./dist/lib/cjs/index.cjs",
   "module": "./dist/lib/esm/index.mjs",
@@ -39,6 +39,12 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.5.3",
     "rollup": "^4.38.0",
     "rollup-plugin-dts": "^6.2.1",
     "ts-node": "^10.9.1",
@@ -46,7 +52,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "commander": "^13.1.0",
+    "commander": "^14.0.0",
     "scrypt-js": "^3.0.1"
   }
 }

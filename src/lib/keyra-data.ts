@@ -4,9 +4,9 @@ export class KeyraData {
   serviceName: string;
   version: number;
   rule: KeyraRule;
-  note: string;
   createDate: Date;
   domain: string;
+  note: string;
 
   constructor(
     serviceName: string,
@@ -63,9 +63,9 @@ export class KeyraData {
   toString(): string {
     return `Service: ${this.serviceName}
     ├─ Version     : ${this.version}
+    ├─ Rule        : ${this.rule.name};
     ├─ Create Date : ${this.createDate.toLocaleString()}
-    ├─ Note        : ${this.note || 'None'}
     ├─ Domain      : ${this.domain || 'None'}
-    └─ Rule        : ${this.rule.name}`;
+    └─ Note        : ${this.note || 'None'}`;
   }
 }

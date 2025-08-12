@@ -18,32 +18,40 @@ export class CLI {
 
   constructor() {
     this.program = new Command();
-    this.commands = [
-      new GenerateCommand(),
-      new GetCommand(),
-      new ListCommand(),
-      new DeleteCommand(),
-      new RotateCommand(),
-      new RuleListCommand(),
-      new RuleAddCommand(),
-      new RuleDeleteCommand()
-    ];
+    this.program.name('keyra');
+    this.program.description(
+      `Keyra — Stateless password generator.
 
-    this.setup();
-  }
+Combines your master password with a service name to create strong,
+unique, repeatable passwords for each site or application.`,
+    );
+    this.program.version(packageJson.version); // Dynamically read version from package.json
 
-  /**
-   * 设置CLI
-   */
-  private setup(): void {
-    this.program
-      .name('keyra')
-      .description('Keyra is a stateless password generator that uses your master password and service name to create strong, unique, and repeatable passwords for every website.')
-      .version(packageJson.version); // Dynamically read version from package.json
+    this.program.commandsGroup('Password Commands:');
+    new GenerateCommand().configure(this.program);
+    new GetCommand().configure(this.program);
+    new RotateCommand().configure(this.program);
+    new ListCommand().configure(this.program);
+    new DeleteCommand().configure(this.program);
 
-    // 注册所有命令
-    this.commands.forEach(command => {
-      command.configure(this.program);
+    this.program.commandsGroup('Rule Commands:');
+    new RuleListCommand().configure(this.program);
+    new RuleAddCommand().configure(this.program);
+    new RuleDeleteCommand().configure(this.program);
+
+    this.program.configureHelp({
+      subcommandDescription(cmd) {
+        const s = cmd.description();
+        return s ? s[0].toUpperCase() + s.slice(1) : '';
+      },
+      commandDescription(cmd) {
+        const s = cmd.description();
+        return s ? s[0].toUpperCase() + s.slice(1) : '';
+      },
+      optionDescription(opt) {
+        const d = opt.description || '';
+        return d ? d[0].toUpperCase() + d.slice(1) : '';
+      },
     });
   }
 

@@ -1,6 +1,12 @@
+/**
+ * @file generate-command.ts
+ * @description CLI command for generating new service password data.
+ * @author 9b9387
+ * @date 2025-04-01
+ */
+
 import { Command } from 'commander';
 import { BaseCommand } from './base-command';
-import * as readline from 'readline';
 import { KeyraRule, KeyraData, DEFAULT_RULE } from '../../lib';
 import { DataManager } from '../managers/data-manager';
 
@@ -11,7 +17,7 @@ export class GenerateCommand extends BaseCommand {
   private dataManager: DataManager;
 
   constructor() {
-    super('gen', 'generate a new password');
+    super('gen', 'Generate a password for the given service');
     this.dataManager = new DataManager();
   }
 
@@ -22,9 +28,13 @@ export class GenerateCommand extends BaseCommand {
     program
       .command(this.name)
       .description(this.description)
-      .argument('<serviceName>', 'Name of the service to generate password')
-      .option('-r, --rule <ruleName>', 'Use specified rule name')
-      .option('-p, --password <masterPassword>', 'Master password')
+      .argument('<service>', 'The name of the service (e.g., github, gmail)')
+      .option('-r, --rule <rule>', 'Specify a password generation rule')
+      .option(
+        '-p, --password <masterPassword>',
+        'Master password (can also use KEYRA_MASTER_PASSWORD env variable)',
+      )
+      .option('-s, --save', 'Save the generated service and rule locally')
       .action((serviceName, options) => this.execute(serviceName, options));
   }
 
@@ -34,54 +44,34 @@ export class GenerateCommand extends BaseCommand {
   private async execute(serviceName: string, options: any): Promise<void> {
     // Check if service name already exists
     if (this.dataManager.hasService(serviceName)) {
-      console.error(`Error: Service name "${serviceName}" already exists.`);
+      console.error(`Service "${serviceName}" already exists. Please choose a different name.`);
       process.exit(1);
     }
-    
+
     // Prioritize the password provided in command line, then use the one from environment variable
     let masterPassword = options.password || process.env.KEYRA_MASTER_PASSWORD;
-    
+
     // If no master password is provided, prompt the user to enter it
     if (!masterPassword) {
-      masterPassword = await this.askPassword('Enter master password: ');
+      masterPassword = await this.askQuestion('Enter master password: ');
       if (!masterPassword) {
-        console.error('Error: Master password is required.');
+        console.error('Master password is required. Operation aborted.');
         process.exit(1);
       }
     }
-    
-    // Determine which rule to use:
-    // 1. If -r parameter is provided, try to get that rule
-    // 2. If that rule doesn't exist or -r is not provided, use default rule
-    let rule: KeyraRule;
-    if (options.rule) {
-      rule = this.ruleManager.getRule(options.rule) || DEFAULT_RULE;
-    } else {
-      rule = DEFAULT_RULE;
-    }
-    
+
+    // Determine which rule to use
+    let rule: KeyraRule = options.rule
+      ? this.ruleManager.getRule(options.rule) || DEFAULT_RULE
+      : DEFAULT_RULE;
+
     const keyraData = new KeyraData(serviceName, 1, rule);
     const password = await this.passwordGenerator.generate(masterPassword, keyraData);
-    console.log(password);
-    
-    // Save data locally
-    this.dataManager.addData(keyraData);
-  }
+    console.log(`Generated password: \n${password}`);
 
-  /**
-   * Ask user for password input
-   */
-  private askPassword(question: string): Promise<string> {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-
-    return new Promise((resolve) => {
-      rl.question(question, (answer) => {
-        rl.close();
-        resolve(answer);
-      });
-    });
+    if (options.save) {
+      this.dataManager.addData(keyraData);
+      console.log(`Service "${serviceName}" has been saved.`);
+    }
   }
 }
