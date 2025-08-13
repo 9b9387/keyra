@@ -97,15 +97,18 @@ export class Generator {
    */
   public async generate(masterPassword: string, data: KeyraData): Promise<string> {
     if (!masterPassword || typeof masterPassword !== 'string') {
-      throw new Error('Master password must be a non-empty string');
+      console.error('Master password must be a non-empty string');
+      return '';
     }
 
     if (!data.serviceName || typeof data.serviceName !== 'string') {
-      throw new Error('Service name must be a non-empty string');
+      console.error('Service name must be a non-empty string');
+      return '';
     }
 
     if (data.rule.validate() === false) {
-      throw new Error('Invalid password rule');
+      console.error('Invalid password rule');
+      return '';
     }
     
     // We need at least one byte per character for the password.

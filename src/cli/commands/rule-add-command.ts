@@ -66,7 +66,18 @@ export class RuleAddCommand extends BaseCommand {
 
       // Collect maximum length
       const lengthStr = await this.askQuestion(`Length [${rule.length}]: `);
-      const length = lengthStr.trim() ? parseInt(lengthStr, 10) : rule.length;
+      let length = lengthStr.trim() ? parseInt(lengthStr, 10) : rule.length;
+      if (isNaN(length)) {
+        console.log('Length must be a number.');
+        return;
+      }
+      if (length < 4) {
+        console.log('Length too small, set to minimum value 4.');
+        length = 4;
+      } else if (length > 4096) {
+        console.log('Length too large, set to maximum value 4096.');
+        length = 4096;
+      }
 
       // Collect uppercase requirement
       const requireUppercaseStr = await this.askQuestion(

@@ -29,15 +29,18 @@ export class KeyraRule {
   // Validate if the rule is legal
   public validate(): boolean {
     if (this.length < 4) {
-      throw new Error('Minimum length cannot be less than 4');
+      console.error('Minimum length cannot be less than 4');
+      return false
     }
 
     if (this.length > 4096) {
-      throw new Error('Maximum length cannot exceed 4096');
+      console.error('Maximum length cannot exceed 4096');
+      return false;
     }
     // Ensure allowedSymbols only contains ASCII characters
     if (!/^[\x20-\x7E]*$/.test(this.allowedSymbols)) {
-      throw new Error('Allowed symbols must only contain ASCII characters');
+      console.error('Allowed symbols must only contain ASCII characters');
+      return false;
     }
     return true;
   }
@@ -62,8 +65,9 @@ export class KeyraRule {
         data.allowedSymbols
       );
     } catch (error) {
-      throw new Error(`Failed to parse KeyraRule from JSON: ${error}`);
+      console.error(`Failed to parse KeyraRule from JSON: ${error}`);
     }
+    return DEFAULT_RULE;
   }
 
   // Returns a string representation of the rule in a tree-like format

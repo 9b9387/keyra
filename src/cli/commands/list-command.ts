@@ -33,6 +33,16 @@ export class ListCommand extends BaseCommand {
   }
 
   /**
+   * Format date as YYYY-MM-DD HH:MM:SS with zero padding
+   * @param date Date object to format
+   * @returns Formatted date string
+   */
+  private formatDate(date: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  }
+
+  /**
    * Execute command
    */
   private execute(): void {
@@ -43,12 +53,74 @@ export class ListCommand extends BaseCommand {
       return;
     }
 
-    // Create table header
-    console.log('\nSaved Service List:\n');
+    // Sort by service name
+    allData.sort((a, b) => a.serviceName.localeCompare(b.serviceName));
 
-    // Display data
-    allData.forEach((data) => {
-      console.log(`${data.serviceName} - ${data.createDate.toLocaleString()}`);
+    // Prepare table rows
+    const rows = allData.map((d) => ({
+      service: d.serviceName,
+      version: String(d.version || 1),
+      rule: d.rule?.name || 'N/A',
+      created: this.formatDate(d.createDate),
+      domain: d.domain || '-',
+      note: (d.note || '').replace(/\s+/g, ' ').trim() || '-',
+    }));
+
+    // Truncate long note & domain for readability
+    const truncate = (s: string, max: number) => (s.length > max ? s.slice(0, max - 1) + '…' : s);
+    rows.forEach((r) => {
+      r.note = truncate(r.note, 30);
+      r.domain = truncate(r.domain, 20);
     });
+
+    const headers = {
+      service: 'Service',
+      version: 'Version',
+      rule: 'Rule',
+      created: 'Created',
+    };
+
+    // Compute column widths
+    const colWidth = (key: keyof typeof headers) =>
+      Math.max(headers[key].length, ...rows.map((r) => (r[key] as string).length));
+
+    const widths = {
+      service: colWidth('service'),
+      version: colWidth('version'),
+      rule: colWidth('rule'),
+      created: colWidth('created'),
+    };
+
+    const pad = (value: string, len: number) => value.padEnd(len, ' ');
+
+    const headerLine = [
+      pad(headers.service, widths.service),
+      pad(headers.version, widths.version),
+      pad(headers.rule, widths.rule),
+      pad(headers.created, widths.created),
+    ].join('  ');
+
+    const sepLine = [
+      '-'.repeat(widths.service),
+      '-'.repeat(widths.version),
+      '-'.repeat(widths.rule),
+      '-'.repeat(widths.created),
+    ].join('  ');
+
+    console.log(`\nSaved Service List (${rows.length}):\n`);
+    console.log(headerLine);
+    console.log(sepLine);
+
+    rows.forEach((r) => {
+      const line = [
+        pad(r.service, widths.service),
+        pad(r.version, widths.version),
+        pad(r.rule, widths.rule),
+        pad(r.created, widths.created),
+      ].join('  ');
+      console.log(line);
+    });
+
+    console.log();
   }
 }

@@ -150,8 +150,10 @@ export class DataManager {
       const dataObject: Record<string, string> = JSON.parse(data);
       for (const serviceName in dataObject) {
         try {
-          const dataItem: KeyraData = KeyraData.deserialize(dataObject[serviceName]);
-          this.dataItems.set(serviceName, dataItem);
+          const dataItem = KeyraData.deserialize(dataObject[serviceName]);
+          if (dataItem !== null) {
+            this.dataItems.set(serviceName, dataItem);
+          }
         } catch (e: any) {
           console.error(
             `Failed to parse data for "${serviceName}": ${e?.message || 'Unknown error'}`,
@@ -180,7 +182,6 @@ export class DataManager {
       writeFileSync(this.defaultDataFilePath, JSON.stringify(dataObject, null, 2), 'utf-8');
     } catch (error: any) {
       console.error(`Failed to auto-save data: ${error?.message || 'Unknown error'}`);
-      // Only log error, do not throw
     }
   }
 }

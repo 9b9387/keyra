@@ -1,4 +1,4 @@
-import { KeyraRule, DEFAULT_RULE} from "../../lib";
+import { KeyraRule, DEFAULT_RULE } from '../../lib';
 import * as path from 'path';
 import * as os from 'os';
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs';
@@ -14,7 +14,7 @@ export class RuleManager {
     this.rules = new Map<string, KeyraRule>();
     this.rules.set(DEFAULT_RULE.name, DEFAULT_RULE);
     this.defaultRuleFilePath = path.join(os.homedir(), '.keyra', 'rules.json');
-    
+
     // 在构造函数中尝试加载已保存的规则
     this.loadRulesFromFile();
   }
@@ -25,7 +25,7 @@ export class RuleManager {
    */
   public addRule(rule: KeyraRule): void {
     if (rule.name === DEFAULT_RULE.name) {
-      throw new Error('Default rule cannot be overridden');
+      return;
     }
     this.rules.set(rule.name, rule);
     // 规则更新后保存
@@ -50,14 +50,14 @@ export class RuleManager {
     if (name === DEFAULT_RULE.name) {
       return false; // 不允许删除默认规则
     }
-    
+
     const result = this.rules.delete(name);
-    
+
     // 规则删除后保存
     if (result) {
       this.saveRulesToFile();
     }
-    
+
     return result;
   }
 
@@ -78,14 +78,15 @@ export class RuleManager {
       if (!existsSync(this.defaultRuleFilePath)) {
         return; // 文件不存在时保持默认规则
       }
-      
+
       // 读取文件内容
       const data = readFileSync(this.defaultRuleFilePath, 'utf-8');
       const rulesObject: Record<string, string> = JSON.parse(data);
-      
+
       // 添加规则
       for (const ruleName in rulesObject) {
-        if (ruleName !== DEFAULT_RULE.name) { // 避免覆盖默认规则
+        if (ruleName !== DEFAULT_RULE.name) {
+          // 避免覆盖默认规则
           try {
             const rule: KeyraRule = KeyraRule.deserialize(rulesObject[ruleName]);
             this.rules.set(ruleName, rule);
@@ -106,18 +107,18 @@ export class RuleManager {
   public saveRulesToFile(): void {
     try {
       const dirPath = path.dirname(this.defaultRuleFilePath);
-      
+
       // 确保目录存在
       if (!existsSync(dirPath)) {
         mkdirSync(dirPath, { recursive: true });
       }
-      
+
       // 创建保存对象，key为rule.name，value为规则序列化后的字符串
       const rulesObject: Record<string, string> = {};
       this.rules.forEach((rule) => {
         rulesObject[rule.name] = rule.serialize();
       });
-      
+
       // 保存为JSON文件
       writeFileSync(this.defaultRuleFilePath, JSON.stringify(rulesObject, null, 2), 'utf-8');
     } catch (error: any) {

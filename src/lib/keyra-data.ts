@@ -37,7 +37,7 @@ export class KeyraData {
    * @param json JSON string
    * @returns KeyraData object
    */
-  static deserialize(json: string): KeyraData {
+  static deserialize(json: string): KeyraData | null {
     try {
       const data = JSON.parse(json);
       const rule_json = JSON.stringify(data.rule);
@@ -52,8 +52,9 @@ export class KeyraData {
       
       return keyraData;
     } catch (error) {
-      throw new Error(`Failed to deserialize KeyraData: ${error}`);
+      console.error(`Failed to deserialize KeyraData: ${error}`);
     }
+    return null
   }
 
   /**

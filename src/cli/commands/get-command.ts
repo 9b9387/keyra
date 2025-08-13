@@ -32,7 +32,10 @@ export class GetCommand extends BaseCommand {
       .argument('<service>', 'Service name')
       .option('-d, --detail', 'Show detailed information')
       .option('-v, --versions', 'Show password history')
-      .option('-p, --password <password>', 'Set master password')
+      .option(
+        '-p, --password <password>',
+        'Master password (can also use KEYRA_MASTER_PASSWORD env variable)',
+      )
       .action(
         async (
           serviceName: string,
@@ -79,7 +82,7 @@ export class GetCommand extends BaseCommand {
         const password = await this.passwordGenerator.generate(masterPassword, data);
 
         // Display password
-        console.log(`${password}\n`);
+        console.log(`\n${password}\n`);
 
         // Show detailed information
         if (options.detail) {

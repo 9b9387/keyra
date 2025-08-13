@@ -47,10 +47,6 @@ export class RotateCommand extends BaseCommand {
         return;
       }
 
-      console.log(`Rotating password for service: "${serviceName}"`);
-      console.log(`Current version: v${existingData.version}`);
-      console.log(`Created date: ${existingData.createDate.toLocaleString()}`);
-
       // Create new data object with version number incremented
       const newData = new KeyraData(
         existingData.serviceName,
@@ -64,7 +60,7 @@ export class RotateCommand extends BaseCommand {
       // Save new data
       this.dataManager.addData(newData);
 
-      console.log(`Password rotated successfully. New version: v${newData.version}`);
+      console.log(`Service "${serviceName}" rotated successfully, new version: ${newData.version}`);
     } catch (error: any) {
       console.error(`Error rotating password: ${error?.message || 'Unknown error'}`);
     }
